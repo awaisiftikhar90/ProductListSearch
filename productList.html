@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Product List - Stanley Martin Homes</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        h3{
+          margin-bottom:20px;
+        }
+        .h-100{
+            height:100vh!important;
+        }
+        .colorBG{
+            background:#5D7988;
+            color: #fff;
+        }
+        .w-70{
+          width:70%!important;
+        }
+        input{
+          padding:20px!important;
+          padding-top:30px!important;
+          padding-bottom:30px!important;
+          border-radius:0px!important;
+        }
+        .btn-success{
+          background:#7CA020!important;
+          border-radius:0px!important;
+          padding-left:15px!important;
+          padding-right:15px!important;
+          font-size:25px!important;
+        }
+        .result{
+          background: #f2f2f2;
+          color:#000;
+          padding-top:20px;
+          padding-bottom:20px;
+          display:none;
+        }
+        .productItem{
+          background:#fff;
+          margin:20px;
+          margin-bottom:0px;
+          border:1px solid #eeeeee;
+          box-shadow: 1px 1px 1px #eeeeee;
+          padding:10px;
+          padding-left:20px;
+          padding-right: 20px;
+          font-size:14px;
+          line-height: 18px;
+        }
+        .productItem:first-child{
+          margin-top:0px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid h-100 colorBG p-5">
+  <div class="m-auto w-70">
+    <h3>Product List Search</h3>
+    <form class="productSearch" id="productSearch">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" id="searchInput" placeholder="Product" aria-label="Product" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-success" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
+        </div>
+      </div>
+    </form>
+    <div class="result" id="result">
+    </div>
+  </div>
+  
+</div>
+  
+
+</body>
+<script>
+  var productData = [
+         {
+             "ProjectGroupID": 23,
+             "MetroAreaID": 1007,
+             "ProjectName": "Edgewater",
+             "ProductID": 980,
+             "ProductName": "The Davis"       
+  },
+         {
+             "ProjectGroupID": 23,
+             "MetroAreaID": 1007,
+             "ProjectName": "Edgewater",
+             "ProductID": "E15",
+             "ProductName": "The Amelia"       
+  },
+         {
+             "ProjectGroupID": 23,
+             "MetroAreaID": 1007,
+             "ProjectName": "Edgewater",
+             "ProductID": "Y54",
+             "ProductName": "The Lockwood"       
+  },
+         {
+             "ProjectGroupID": 23,
+             "MetroAreaID": 1007,
+             "ProjectName": "Edgewater",
+             "ProductID": "Y58",
+             "ProductName": "The Prescott"       
+  },
+         {
+             "ProjectGroupID": 25,
+             "MetroAreaID": 1007,
+             "ProjectName": "Inwood",
+             "ProductID": 1562,
+             "ProductName": "The Dupree"       
+  },
+         {
+             "ProjectGroupID": 41,
+             "MetroAreaID": 1008,
+             "ProjectName": "Estuary at Bowen Village",
+             "ProductID": 1601,
+             "ProductName": "The Stono"       
+  },
+         {
+             "ProjectGroupID": 41,
+             "MetroAreaID": 1008,
+             "ProjectName": "Estuary at Bowen Village",
+             "ProductID": "U68",
+             "ProductName": "The Moultrie"       
+  },
+       {
+       "ProjectGroupID": 43,
+       "MetroAreaID": 1008,
+       "ProjectName": "Mixson",
+       "ProductID": "1674",
+       "ProductName": "The Stella"    
+  },
+      {
+         "ProjectGroupID": 47,
+         "MetroAreaID": 1008,
+         "ProjectName": "Oldfield",
+         "ProductID": "1665",
+         "ProductName": "The Tidalview"    
+  }    ,
+   {
+         "ProjectGroupID": 47,
+         "MetroAreaID": 1008,
+         "ProjectName": "Oldfield",
+         "ProductID": null,
+         "ProductName": null
+  }
+];
+
+$(document).ready(function(){
+    $('#productSearch').on('submit', function(e){
+      e.preventDefault();
+    });
+    $('#searchBtn').on('click',function(e){
+      let result = $('#result');
+      result.html("");
+      result.hide();
+
+      let searchInput = $('#searchInput').val();
+      if(searchInput==""){
+        alert("No Search Input found!");
+        return;
+      }
+      
+      
+      let resultData = productData.sort((a, b) => {
+        return (a.ProductName!=null) ? a.ProductName.localeCompare(b.ProductName) : 1;
+      }).filter((a) => {
+        return  ((a.ProductName!=null) ? a.ProductName.includes(searchInput) : false) || 
+                ((a.ProductID!=null) ? a.ProductID == searchInput : false) || 
+                ((a.MetroAreaID!=null) ? a.MetroAreaID == searchInput : false) ||
+                ((a.ProjectName!=null) ? a.ProjectName.includes(searchInput) : false) ||
+                ((a.ProjectGroupID!=null) ? a.ProjectGroupID == searchInput : false);
+      });
+      if(resultData.length==0){
+        alert("No Result found!");
+        return;
+      }else{
+        resultData.forEach((a) => {
+          let productItem = `<div class="productItem">
+          ${((a.ProductName!=null) ? a.ProductName : "")}<br>
+          ${((a.ProductID!=null) ? a.ProductID : "")}<br>
+          ${((a.MetroAreaID!=null) ? a.MetroAreaID : "")}<br>
+          ${((a.ProjectName!=null) ? a.ProjectName : "")}<br>
+          ${((a.ProjectGroupID!=null) ? a.ProjectGroupID : "")}<br>
+          </div>`;
+          result.append(productItem);
+        });
+      }
+      result.show();
+    });
+});
+
+</script>
+</html>
